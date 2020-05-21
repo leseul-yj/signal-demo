@@ -1,0 +1,22 @@
+{
+  "name": "libsignal-protocol-javascript-example",
+  "version": "1.0.0",
+  "description": "An example on \"how to use `libsignal-protocol-javascript`?\"",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shaljam/libsignal-protocol-javascript-example.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shaljam/libsignal-protocol-javascript-example/issues"
+  },
+  "homepage": "https://github.com/shaljam/libsignal-protocol-javascript-example#readme",
+  "dependencies": {
+    "ws": "^7.3.0"
+  }
+}
