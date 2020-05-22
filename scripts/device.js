@@ -7,11 +7,11 @@ class Device {
    async decrypt(ciphertext, preKey = false) {
       let sessionCipher = new SessionCipher(this.store, this.address);
       let plaintextBuffer;
-
+      //ciphertext = atob(ciphertext);
       if (preKey)
-         plaintextBuffer = await sessionCipher.decryptPreKeyWhisperMessage(ciphertext, 'binary');
+         plaintextBuffer = await sessionCipher.decryptPreKeyWhisperMessage(ciphertext, 'base64');
       else
-         plaintextBuffer = await sessionCipher.decryptWhisperMessage(ciphertext, 'binary');
+         plaintextBuffer = await sessionCipher.decryptWhisperMessage(ciphertext, 'base64');
 
       return plaintextBuffer;
    }
@@ -24,7 +24,7 @@ class Device {
 
          let session = this.getSession();
          let ciphertext = await session.encrypt(plaintext);
-
+         //ciphertext.body = btoa(ciphertext.body)
          return {
             preKey: ciphertext.type === 3,
             ciphertext: ciphertext,
@@ -46,7 +46,6 @@ class Device {
 
    async establishSession() {
       let signalBundle = await this.store.getPreKeyBundle(this.address);
-
       this.processPreKeyMessage(signalBundle);
    }
 

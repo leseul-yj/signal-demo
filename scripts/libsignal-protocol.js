@@ -35338,6 +35338,12 @@ var util = (function() {
             }
             return new dcodeIO.ByteBuffer.wrap(thing).toString('binary');
         },
+        toBase64: function(thing) {
+          if (typeof thing == 'string') {
+              return thing;
+          }
+          return new dcodeIO.ByteBuffer.wrap(thing).toString('base64');
+      },
         toArrayBuffer: function(thing) {
             if (thing === undefined) {
                 return undefined;
@@ -36121,7 +36127,11 @@ SessionCipher.prototype = {
               preKeyMsg.signedPreKeyId = session.pendingPreKey.signedKeyId;
 
               preKeyMsg.message = message;
-              var result = String.fromCharCode((3 << 4) | 3) + util.toString(preKeyMsg.encode());
+              //var result = String.fromCharCode((3 << 4) | 3) + util.toString(preKeyMsg.encode());
+              //dcodeIO.ByteBuffer.concat([data, key]).toArrayBuffer()
+              var rsBuffer =  preKeyMsg.encode().prepend(String.fromCharCode((3 << 4) | 3));
+
+              var result = rsBuffer.toBase64();
               return {
                   type           : 3,
                   body           : result,
