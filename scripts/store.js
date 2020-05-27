@@ -26,7 +26,6 @@ class Store {
     }
 
     setOwnDeviceList(deviceList) {
-        debugger
         this.put('deviceList',deviceList);
     }
 
@@ -92,7 +91,8 @@ class Store {
                 if(/Key$/.test(key1)) {
                     // if (key.includes('Key')) {
                     console.log('get %s has Key %s',key,key1);
-                    return ArrayBufferUtils.fromArray(value);
+                    //return ArrayBufferUtils.fromArray(value);
+                    return value;
                 }
 
                 return value;
@@ -120,9 +120,9 @@ class Store {
             throw new Error('tried to check identity key for undefined/null key');
         }
 
-        if(!(identityKey instanceof ArrayBuffer)) {
-            throw new Error('Expected identityKey to be an ArrayBuffer');
-        }
+        // if(!(identityKey instanceof ArrayBuffer)) {
+        //     throw new Error('Expected identityKey to be an ArrayBuffer');
+        // }
 
         let trusted = this.get(STORE_PREFIX_IDENTITYKEY + identifier);
         console.log('trusted %s \t %s \t %s',trusted === undefined,trusted,STORE_PREFIX_IDENTITYKEY + identifier);

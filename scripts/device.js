@@ -22,8 +22,8 @@ class Device {
             await this.establishSession();
          }
 
-         let session = this.getSession();
-         let ciphertext = await session.encrypt(plaintext);
+         let session = await this.getSession();
+         let ciphertext = await session.encrypt(toBuffer(plaintext));
          //ciphertext.body = btoa(ciphertext.body)
          return {
             preKey: ciphertext.type === 3,
@@ -38,18 +38,23 @@ class Device {
       }
    }
 
-   processPreKeyMessage(preKeyBundle) {
+   async processPreKeyMessage(preKeyBundle,identifyKeyPair) {
+
       let builder = new SessionBuilder(this.store, this.address);
 
-      return builder.processPreKey(preKeyBundle);
+      //return builder.processPreKey(preKeyBundle);
+      const {identityKey,registrationId,preKey,signedPreKey}= preKeyBundle;
+      let buildSession = await builder.initOutgoing(preKeyBundle);
+      return buildSession;
    }
 
    async establishSession() {
       let signalBundle = await this.store.getPreKeyBundle(this.address);
-      this.processPreKeyMessage(signalBundle);
+      let identifyKeyPair = await this.store.getIdentityKeyPair();
+      await this.processPreKeyMessage(signalBundle,identifyKeyPair);
    }
 
-   getSession() {
+   async getSession() {
       if (!this.session) {
          this.session = new SessionCipher(this.store, this.address);
       }

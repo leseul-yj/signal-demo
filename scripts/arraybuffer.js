@@ -139,3 +139,7 @@ class ArrayBufferUtils {
         return new Uint8Array(a).buffer;
     }
 }
+
+const toBuffer = (key) => {
+  return libsignal.nodeBuffer.Buffer.from(key)
+}

@@ -140,7 +140,6 @@ class Connection {
     }
 
     updateDevices(message) {
-        debugger
         let ownJid = this.username;
 
         let deviceIds = message.devices;

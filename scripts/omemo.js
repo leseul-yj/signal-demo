@@ -137,32 +137,33 @@ class Omemo {
       throw 'Error during decryption: ' + err;
     }
     return ArrayBufferUtils.decode(exportedKey);
-    const exportedAESKey = exportedKey.slice(0, 16);
-    const authenticationTag = exportedKey.slice(16);
 
-    if (authenticationTag.byteLength !== 16) {
-      //@TODO authentication tag is also allowed to be larger
-      throw "Authentication tag too short";
-    }
+    // const exportedAESKey = exportedKey.slice(0, 16);
+    // const authenticationTag = exportedKey.slice(16);
 
-    const iv = (encryptedData).iv;
-    const ciphertextAndAuthenticationTag = ArrayBufferUtils.concat((encryptedData).payload, authenticationTag);
+    // if (authenticationTag.byteLength !== 16) {
+    //   //@TODO authentication tag is also allowed to be larger
+    //   throw "Authentication tag too short";
+    // }
 
-    return this.decryptWithAES(exportedAESKey, iv, ciphertextAndAuthenticationTag);
+    // const iv = (encryptedData).iv;
+    // const ciphertextAndAuthenticationTag = ArrayBufferUtils.concat((encryptedData).payload, authenticationTag);
+
+    // return this.decryptWithAES(exportedAESKey, iv, ciphertextAndAuthenticationTag);
   }
-  async decryptWithAES(exportedAESKey, iv, data) {
-    const key = await window.crypto.subtle.importKey('raw', exportedAESKey, {
-      name: 'AES-GCM'
-    }, false, ['decrypt']);
+  // async decryptWithAES(exportedAESKey, iv, data) {
+  //   const key = await window.crypto.subtle.importKey('raw', exportedAESKey, {
+  //     name: 'AES-GCM'
+  //   }, false, ['decrypt']);
 
-    const decryptedBuffer = await window.crypto.subtle.decrypt({
-      name: 'AES-GCM',
-      iv: iv,
-      tagLength: AES_TAG_LENGTH
-    }, key, data);
+  //   const decryptedBuffer = await window.crypto.subtle.decrypt({
+  //     name: 'AES-GCM',
+  //     iv: iv,
+  //     tagLength: AES_TAG_LENGTH
+  //   }, key, data);
 
-    return ArrayBufferUtils.decode(decryptedBuffer);
-  }
+  //   return ArrayBufferUtils.decode(decryptedBuffer);
+  // }
 
   getPeer(jid) {
     if (!this.peers[jid]) {

@@ -8,13 +8,13 @@ const AES_EXTRACTABLE = true;
 
 localStorage.clear();
 
-let libsignal = (window).libsignal;
+let libsignal = (window).nodesignal;
 
-let KeyHelper = libsignal.KeyHelper;
-let SignalProtocolAddress = libsignal.SignalProtocolAddress;
+let KeyHelper = libsignal.keyhelper;
+let SignalProtocolAddress = libsignal.ProtocolAddress;
 let SessionBuilder = libsignal.SessionBuilder;
 let SessionCipher = libsignal.SessionCipher;
-let FingerprintGenerator = libsignal.FingerprintGenerator;
+// let FingerprintGenerator = libsignal.FingerprintGenerator;
 
 var connection;
 
