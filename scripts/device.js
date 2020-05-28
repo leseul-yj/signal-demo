@@ -23,7 +23,7 @@ class Device {
          }
 
          let session = await this.getSession();
-         let ciphertext = await session.encrypt(toBuffer(plaintext));
+         let ciphertext = await session.encrypt(plaintext);
          //ciphertext.body = btoa(ciphertext.body)
          return {
             preKey: ciphertext.type === 3,

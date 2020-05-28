@@ -3,7 +3,7 @@ class Connection {
         this.username = username;
         this.resolves = {};
         let connection = this;
-        var websocket = new WebSocket("ws://localhost:2222/connection");
+        var websocket = new WebSocket("ws://192.168.4.7:2222/connection");
         this.websocket = websocket;
         this.messagesDiv = document.getElementById('messages');
 
@@ -130,7 +130,6 @@ class Connection {
     }
 
     async decrypt(message) {
-        debugger
         let decrypted = await this.omemo.decrypt(message);
         console.log('decrypted message: %s',decrypted);
         var newNode = document.createElement('div');

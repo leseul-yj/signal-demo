@@ -29,24 +29,9 @@ class Omemo {
 
     return peer.encrypt(message).then((encryptedMessages) => {
       const stanza = Stanza.buildEncryptedStanza(encryptedMessages, this.store.getDeviceId());
-
-      //  $(xmlElement.tree()).find(`html[xmlns="${Strophe.NS.XHTML_IM}"]`).remove();
-      //  $(xmlElement.tree()).find('>body').remove();
-
-      //  xmlElement.cnode(stanza.tree());
-      //  xmlElement.up().c('store', {
-      //     xmlns: 'urn:xmpp:hints'
-      //  }).up();
-
-      //  message.encrypted = stanza;
-
       return stanza;
     })
-    // .catch((msg) => {
-    //    console.warn(msg); //@TODO show warning
 
-    //    return message;
-    // });
   }
 
   // async decrypt(stanza) {

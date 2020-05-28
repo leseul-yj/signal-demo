@@ -1,6 +1,6 @@
 const WebSocket = require('ws');
 
-const wss = new WebSocket.Server({ host: 'localhost', port: 2222 });
+const wss = new WebSocket.Server({ host: '192.168.4.7', port: 2222 });
 
 function send(ws, o) {
     ws.send(JSON.stringify(o));

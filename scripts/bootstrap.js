@@ -27,17 +27,24 @@ class Bootstrap {
    setup() {
       return Promise.all([
          this.generateDeviceId(),
-         KeyHelper.generateIdentityKeyPair(),
-         KeyHelper.generateRegistrationId(),
+         this.generateIdentityKeyPair(),
+         this.generateRegistrationId(),
       ]).then(([deviceId, identityKey, registrationId]) => {
          this.store.put('deviceId', deviceId);
          this.store.put('identityKey', identityKey);
          this.store.put('registrationId', registrationId);
+         console.log('registrationId', registrationId)
       });
    }
-
+   generateIdentityKeyPair(){
+      return Promise.resolve(KeyHelper.generateIdentityKeyPair())
+   }
+   generateRegistrationId(){
+      return Promise.resolve(KeyHelper.generateRegistrationId())
+   }
    generateDeviceId() {
-      return Promise.resolve(Random.number(Math.pow(2, 31) - 1, 1));
+      // return Promise.resolve(Random.number(Math.pow(2, 31) - 1, 1));
+      return Promise.resolve(Config.deviceId);
    }
 
    async generateBundle() {

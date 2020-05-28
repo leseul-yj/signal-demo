@@ -11,11 +11,11 @@
         }
     </script>
     <!-- <script src ="scripts/require.js"></script> -->
-    <script src="./scripts/core.js"></script>
+    <script src="./scripts/jquery.min.js"></script>
+    <script src="./scripts/dist.js"></script>
     <script src="scripts/bundle.js"></script>
-    <script src="scripts/jquery.min.js"></script>
     <script src="scripts/storage.js"></script>
-    <!-- <script src="scripts/libsignal-protocol.js"></script> -->
+    
     <script src="scripts/random.js"></script>
     <script src="scripts/device.js"></script>
     <script src="scripts/bootstrap.js"></script>
@@ -43,7 +43,7 @@
     <p>To:</p>
     <input id='to' type="text" name="to" value="bob"><br>
     <p>Message:</p>
-    <input id='message' type="text" name="message" value="hi!"><br>
+    <input id='message' type="text" name="message" value="hi!+=/s%^ LL**()\"><br>
     <button type="button" onclick="sendMessage()">Send</button>
 
     <div id="messages">
@@ -51,5 +51,11 @@
     </div>
 
 </body>
-
+<script>
+    const Config = {
+        "deviceId":1000000000,
+        "username":"alice",
+        "registrationId":100,
+    }
+</script>
 </html>
