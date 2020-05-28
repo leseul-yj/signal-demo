@@ -34,7 +34,8 @@ class Bundle {
             signature: ArrayBufferUtils.toBase64(signedPreKey.signature)
          }
       }
-      console.log("SignalBundle", JSON.stringify(base64Data));
+
+
       //一次性公钥
       // recordsUserPublicKey = "BeT+YWX8KiW0+PFxf/G+nUJuxMEWIlLPZ89sei7gvnpZ";
 
@@ -45,7 +46,7 @@ class Bundle {
       // signedPreKeyUserPublicKey = "BYnp+em8oJZepOBFN6K2NmVg3/JUZwBLhXPUAUNR4bp5";
 
       /// MwohBR6waCiw9uqQxt79CbrvIbBiYHJSJENSkM5ImV79SD5vEAAYACIgc3rv6Bt0XP6j8NruFE+tMXJwe3NoAseC64nSOfB/s6WLoA3LXZSZdg==
-      let fakeBundle =  {
+      let fakeBundle = {
          identityKey: this.getIdentityKey().pubKey,
          registrationId: registrationId,
          preKey: {
@@ -74,40 +75,6 @@ class Bundle {
       };
    }
 
-   //    toXML() {
-   //       let xmlBundle = $build('bundle', {
-   //          xmlns: 'eu.siacs.conversations.axolotl'
-   //       });
-
-   //       xmlBundle
-   //          .c('signedPreKeyPublic', {
-   //             signedPreKeyId: this.bundle.signedPreKey.keyId
-   //          })
-   //          .t(ArrayBufferUtils.toBase64(this.bundle.signedPreKey.keyPair.pubKey))
-   //          .up();
-
-   //       xmlBundle
-   //          .c('signedPreKeySignature')
-   //          .t(ArrayBufferUtils.toBase64(this.bundle.signedPreKey.signature)) //@REVIEW
-   //          .up();
-
-   //       xmlBundle
-   //          .c('identityKey')
-   //          .t(ArrayBufferUtils.toBase64(this.bundle.identityKey.pubKey))
-   //          .up();
-
-   //       for (let preKey of this.bundle.preKeys) {
-   //          xmlBundle
-   //             .c('preKeyPublic', {
-   //                preKeyId: preKey.keyId
-   //             })
-   //             .t(ArrayBufferUtils.toBase64(preKey.keyPair.pubKey))
-   //             .up();
-   //       }
-
-   //       return xmlBundle;
-   //    }
-
    toObject() {
       // 发送自己的公钥给服务器
       let xmlBundle = {
@@ -117,73 +84,23 @@ class Bundle {
          },
          signedPreKeySignature: ArrayBufferUtils.toBase64(this.bundle.signedPreKey.signature),
          identityKey: ArrayBufferUtils.toBase64(this.bundle.identityKey.pubKey),
-         preKeyPublic: this.bundle.preKeys.map(function (preKey) {
+         preKeyPublic: this.bundle.preKeys.map(function(preKey) {
             return {
                preKeyId: preKey.keyId,
                value: ArrayBufferUtils.toBase64(preKey.keyPair.pubKey)
             }
          })
       }
-
+      console.log('identityKeyPubkey',ArrayBufferUtils.toBase64(this.bundle.identityKey.pubKey));
+      console.log('identityKeyPrivkey',ArrayBufferUtils.toBase64(this.bundle.identityKey.privKey));
+      console.log('preKeyPubkey',ArrayBufferUtils.toBase64(this.bundle.preKeys[0].keyPair.pubKey));
+      console.log('preKeyPrivkey',ArrayBufferUtils.toBase64(this.bundle.preKeys[0].keyPair.privKey));
+      console.log('signedPreKey.keyId',this.bundle.signedPreKey.keyId);
+      console.log('signedPubKey',ArrayBufferUtils.toBase64(this.bundle.signedPreKey.keyPair.pubKey));
+      console.log('signedPrivKey',ArrayBufferUtils.toBase64(this.bundle.signedPreKey.keyPair.privKey));
+      console.log('signature',ArrayBufferUtils.toBase64(this.bundle.signedPreKey.signature));
       return xmlBundle;
    }
-
-   //  <xs:element name="bundle">
-   //     <xs:complexType>
-   //       <xs:sequence>
-   //         <xs:element name="signedPreKeyPublic" type="base64Binary">
-   //           <xs:attribute name="signedPreKeyId" type="integer"/>
-   //         </xs:element>
-   //         <xs:element name="signedPreKeySignature" type="base64Binary"/>
-   //         <xs:element name="identityKey" type="base64Binary"/>
-   //         <xs:element name="prekeys">
-   //           <xs:complexType>
-   //             <xs:sequence>
-   //               <xs:element name="preKeyPublic" type="base64Binary" maxOccurs="unbounded">
-   //                 <xs:attribute name="preKeyId" type="integer" use="required"/>
-   //               </xs:element>
-   //             </xs:sequence>
-   //           </xs:complexType>
-   //         </xs:element>
-   //       </xs:sequence>
-   //     </xs:complexType>
-   //   </xs:element>
-
-
-   //    static fromXML(xmlElement) {
-   //       let targetSelector = 'bundle[xmlns="eu.siacs.conversations.axolotl"]';
-   //       let xmlBundle = $(xmlElement).is(targetSelector) ? $(xmlElement) : $(xmlElement).find(targetSelector);
-
-   //       if (xmlBundle.length !== 1) {
-   //          throw new Error('Could not find bundle element');
-   //       }
-
-   //       let xmlIdentityKey = xmlBundle.find('identityKey');
-   //       let xmlSignedPreKeyPublic = xmlBundle.find('signedPreKeyPublic');
-   //       let xmlSignedPreKeySignature = xmlBundle.find('signedPreKeySignature');
-   //       let xmlPreKeys = xmlBundle.find('preKeyPublic');
-
-   //       return new Bundle({
-   //          identityKey: {
-   //             pubKey: ArrayBufferUtils.fromBase64(xmlIdentityKey.text())
-   //          },
-   //          signedPreKey: {
-   //             keyPair: {
-   //                pubKey: ArrayBufferUtils.fromBase64(xmlSignedPreKeyPublic.text())
-   //             },
-   //             signature: ArrayBufferUtils.fromBase64(xmlSignedPreKeySignature.text()),
-   //             keyId: parseInt(xmlSignedPreKeyPublic.attr('signedPreKeyId'))
-   //          },
-   //          preKeys: xmlPreKeys.get().map(function(element) {
-   //             return {
-   //                keyPair: {
-   //                   pubKey: ArrayBufferUtils.fromBase64($(element).text())
-   //                },
-   //                keyId: parseInt($(element).attr('preKeyId'))
-   //             }
-   //          }),
-   //       });
-   //    }
 
    static fromJSON(json) {
       let xmlIdentityKey = json['identityKey'];
@@ -202,7 +119,7 @@ class Bundle {
             signature: ArrayBufferUtils.fromBase64(xmlSignedPreKeySignature),
             keyId: xmlSignedPreKeyPublic.signedPreKeyId
          },
-         preKeys: xmlPreKeys.map(function (element) {
+         preKeys: xmlPreKeys.map(function(element) {
             return {
                keyPair: {
                   pubKey: ArrayBufferUtils.fromBase64(element.value)

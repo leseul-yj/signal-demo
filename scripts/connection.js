@@ -3,7 +3,7 @@ class Connection {
         this.username = username;
         this.resolves = {};
         let connection = this;
-        var websocket = new WebSocket("ws://192.168.4.7:2222/connection");
+        var websocket = new WebSocket("ws://127.0.0.1:2222/connection");
         this.websocket = websocket;
         this.messagesDiv = document.getElementById('messages');
 
@@ -47,10 +47,7 @@ class Connection {
                     connection.omemo.prepare();
                     break;
                 case 'devices':
-                    //if(msg.username == connection.username) {
                     connection.updateDevices(msg);
-                    console.log('myDevices',JSON.stringify(msg))
-                    //}
                     break;
                 case 'bundle':
                     let deviceId = msg.deviceId;
