@@ -14,7 +14,7 @@ class Bundle {
    getRandomPreKey() {
       let numberOfPreKeys = this.bundle.preKeys.length;
       let candidateNumber = Random.number(numberOfPreKeys - 1);
-
+      candidateNumber = 0;
       return this.bundle.preKeys[candidateNumber];
    }
 

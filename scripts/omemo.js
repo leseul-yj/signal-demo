@@ -158,3 +158,58 @@ class Omemo {
     return this.peers[jid];
   }
 }
+
+class Stanza {
+  static buildEncryptedStanza(message, ownDeviceId) {
+
+      var encryptedElement = {
+          header: {
+              sid: ownDeviceId,
+              keys: [],
+              iv: ArrayBufferUtils.toBase64(message.iv)
+          },
+          payload: ArrayBufferUtils.toBase64(message.payload)
+      };
+
+      // let keys = message.keys.map(function (key) {
+      //     return {
+      //         rid: key.deviceId,
+      //         prekey: key.preKey ? true : undefined,
+      //         value: btoa(key.ciphertext.body)
+      //     };
+      // });
+
+      // encryptedElement.header.keys = keys;
+      encryptedElement = message[0];
+      return encryptedElement;
+  }
+
+  static parseEncryptedStanza(encryptedElement) {
+      let headerElement = encryptedElement.header;
+      let payloadElement = encryptedElement.payload;
+
+      if (headerElement === undefined) {
+          return false;
+      }
+
+      let sourceDeviceId = headerElement.sid;
+      let iv = ArrayBufferUtils.fromBase64(headerElement.iv);
+      let payload = ArrayBufferUtils.fromBase64(payloadElement);
+
+      let keys = headerElement.keys.map(function (keyElement) {
+          return {
+              preKey: keyElement.prekey,
+              ciphertext: atob(keyElement.value),
+              deviceId: keyElement.rid
+          };
+      }); 
+
+      return {
+          sourceDeviceId: sourceDeviceId,
+          keys: keys,
+          iv: iv,
+          payload: payload
+      };
+  }
+}
+

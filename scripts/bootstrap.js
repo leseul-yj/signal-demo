@@ -1,7 +1,7 @@
 class Bootstrap {
    constructor(store, connection) {
-       this.store = store;
-       this.connection = connection;
+      this.store = store;
+      this.connection = connection;
    }
 
    async prepare() {
@@ -33,18 +33,40 @@ class Bootstrap {
          this.store.put('deviceId', deviceId);
          this.store.put('identityKey', identityKey);
          this.store.put('registrationId', registrationId);
-         console.log('registrationId', registrationId)
       });
    }
-   generateIdentityKeyPair(){
-      return Promise.resolve(KeyHelper.generateIdentityKeyPair())
+   generateIdentityKeyPair() {
+      // return Promise.resolve(KeyHelper.generateIdentityKeyPair());
+      let identityKey;
+      let {
+         identifyKeyPair
+      } = Config;
+      if (identifyKeyPair && identifyKeyPair.pubKey && identifyKeyPair.privKey) {
+         identityKey = {
+            "pubKey": ArrayBufferUtils.fromBase64(identifyKeyPair.pubKey),
+            "privKey": ArrayBufferUtils.fromBase64(identifyKeyPair.privKey)
+         };
+      } else {
+         identityKey = KeyHelper.generateIdentityKeyPair();
+      }
+      return Promise.resolve(identityKey);
    }
-   generateRegistrationId(){
-      return Promise.resolve(KeyHelper.generateRegistrationId())
+
+   generateRegistrationId() {
+      let registrationId = Config.registrationId;
+      if (registrationId == undefined) {
+         registrationId = KeyHelper.generateRegistrationId();
+      }
+      return Promise.resolve(registrationId);
    }
+
    generateDeviceId() {
+      let deviceId = Config.deviceId;
+      if (deviceId == undefined) {
+         deviceId = Random.number(Math.pow(2, 31) - 1, 1);
+      }
+      return Promise.resolve(deviceId);
       // return Promise.resolve(Random.number(Math.pow(2, 31) - 1, 1));
-      return Promise.resolve(Config.deviceId);
    }
 
    async generateBundle() {

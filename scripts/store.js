@@ -214,7 +214,6 @@ class Store {
     }
 
     async getPreKeyBundle(address) {
-        debugger
         const node = NS_BUNDLES + address.getDeviceId();
 
         // TODO: get bundle form localstorage

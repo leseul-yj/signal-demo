@@ -111,7 +111,6 @@ class Connection {
     }
 
     async sendMessage(to,message) {
-        debugger
         let encryptedMessage = await this.omemo.encrypt(to,message);
         console.log('sending message: %s to %s',message,to);
         this.send({
@@ -155,7 +154,6 @@ class Connection {
             if(!(deviceId in connection.resolves)) {
                 connection.resolves[deviceId] = [];
             }
-
             connection.resolves[deviceId].push(resolve);
             connection.send({
                 type: 'getBundle',
