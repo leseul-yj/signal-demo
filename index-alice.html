@@ -11,6 +11,8 @@
         }
     </script>
     <!-- <script src ="scripts/require.js"></script> -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.19.2/axios.min.js"></script>
+    <script src="./scripts/api.js"></script>
     <script src="./scripts/jquery.min.js"></script>
     <script src="./scripts/dist.js"></script>
     <script src="scripts/bundle.js"></script>
@@ -28,27 +30,54 @@
     <!-- <script src="scripts/bundle.js"></script> -->
     <script src="scripts/index.js"></script>
 </head>
+<style>
+    .root {
+        display: flex;
+        width: 80%;
+    }
+    
+    .wrap {
+        flex: 1;
+    }
+</style>
+<body class="root">
+    <div class="wrap">
+        <h1>Welcome to secure chat!</h1>
+        <!-- <button type="button" onclick="store('hi', 'ali')">set</button>
+        <button type="button" onclick="console.log(retrieve('hi'))">get</button>
+        <button type="button" onclick="sendToServer()">get</button> -->
+        <p>Username:</p>
+        <input id='username' type="text" name="to" value="alice"><br>
+        <button type="button" onclick="register()">Register</button>
+        <br>
 
-<body>
+        <p>To:</p>
+        <input id='to' type="text" name="to" value="bob"><br>
+        <p>Message:</p>
+        <input id='message' type="text" name="message" value="hi!+=/s%^ LL**()\"><br>
+        <button type="button" onclick="sendMessage()">Send</button>
 
-    <h1>Welcome to secure chat!</h1>
-    <!-- <button type="button" onclick="store('hi', 'ali')">set</button>
-    <button type="button" onclick="console.log(retrieve('hi'))">get</button>
-    <button type="button" onclick="sendToServer()">get</button> -->
-    <p>Username:</p>
-    <input id='username' type="text" name="to" value="alice"><br>
-    <button type="button" onclick="register()">Register</button>
-    <br>
+        <div id="messages">
 
-    <p>To:</p>
-    <input id='to' type="text" name="to" value="bob"><br>
-    <p>Message:</p>
-    <input id='message' type="text" name="message" value="hi!+=/s%^ LL**()\"><br>
-    <button type="button" onclick="sendMessage()">Send</button>
-
-    <div id="messages">
-
+        </div>
     </div>
+    <!-- <div class="wrap">
+        <h1>set Bob Info!</h1>
+        <p>设置身份公钥</p>
+        <input type="text" id="identifyPubKey">
+        <p>设置预共享公钥</p>
+        <input type="text" id="prePubKey">
+        <p>设置签名公钥</p>
+        <input type="text" id="signPubKey">
+        <p>设置签名</p>
+        <input type="text" id="signature">
+        <p>设置密文</p>
+        <input type="text" id="ciphertext">
+        <button >确定</button>
+        <p>明文</p>
+        <p id="plaintext"></p>
+    </div> -->
+
 
 </body>
 <script>
@@ -71,6 +100,7 @@
             "signature": "BjBiSKqGVijQJrUTD/mluEiwmIjAcEmKHnZtg8fMPun7KhUsrSmmgC7T++Sik7DWECbMrlag4hZ9zNVH0VMEAQ=="
         }
     }
+
 </script>
 
 </html>

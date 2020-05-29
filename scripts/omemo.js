@@ -31,60 +31,7 @@ class Omemo {
       const stanza = Stanza.buildEncryptedStanza(encryptedMessages, this.store.getDeviceId());
       return stanza;
     })
-
   }
-
-  // async decrypt(stanza) {
-  //   if (stanza.type !== 'message') {
-  //     throw 'Root element is no message element';
-  //   }
-
-  //   const encryptedElement = stanza.encrypted;
-
-  //   if (encryptedElement === undefined) {
-  //     throw 'No encrypted stanza found';
-  //   }
-
-  //   const from = stanza.from;
-  //   // const encryptedData = Stanza.parseEncryptedStanza(encryptedElement);
-  //   const encryptedData = encryptedElement
-  //   if (!encryptedData) {
-  //     throw 'Could not parse encrypted stanza';
-  //   }
-
-  //   const ownDeviceId = this.store.getDeviceId();
-  //   const ownPreKeyFiltered = encryptedData.keys.filter(function (preKey) {
-  //     return ownDeviceId === preKey.deviceId;
-  //   });
-
-  //   if (ownPreKeyFiltered.length !== 1) {
-  //     return Promise.reject(`Found ${ownPreKeyFiltered.length} PreKeys which match my device id (${ownDeviceId}).`);
-  //   }
-
-  //   const ownPreKey = ownPreKeyFiltered[0]; //@TODO rename var
-  //   const peer = this.getPeer(from);
-  //   //   const exportedKey;
-
-  //   var exportedKey;
-  //   try {
-  //     exportedKey = await peer.decrypt(encryptedData.sourceDeviceId, ownPreKey.ciphertext, ownPreKey.preKey);
-  //   } catch (err) {
-  //     throw 'Error during decryption: ' + err;
-  //   }
-
-  //   const exportedAESKey = exportedKey.slice(0, 16);
-  //   const authenticationTag = exportedKey.slice(16);
-
-  //   if (authenticationTag.byteLength !== 16) {
-  //     //@TODO authentication tag is also allowed to be larger
-  //     throw "Authentication tag too short";
-  //   }
-
-  //   const iv = (encryptedData).iv;
-  //   const ciphertextAndAuthenticationTag = ArrayBufferUtils.concat((encryptedData).payload, authenticationTag);
-
-  //   return this.decryptWithAES(exportedAESKey, iv, ciphertextAndAuthenticationTag);
-  // }
 
   async decrypt(stanza) {
     if (stanza.type !== 'message') {
@@ -122,33 +69,8 @@ class Omemo {
       throw 'Error during decryption: ' + err;
     }
     return ArrayBufferUtils.decode(exportedKey);
-
-    // const exportedAESKey = exportedKey.slice(0, 16);
-    // const authenticationTag = exportedKey.slice(16);
-
-    // if (authenticationTag.byteLength !== 16) {
-    //   //@TODO authentication tag is also allowed to be larger
-    //   throw "Authentication tag too short";
-    // }
-
-    // const iv = (encryptedData).iv;
-    // const ciphertextAndAuthenticationTag = ArrayBufferUtils.concat((encryptedData).payload, authenticationTag);
-
-    // return this.decryptWithAES(exportedAESKey, iv, ciphertextAndAuthenticationTag);
   }
-  // async decryptWithAES(exportedAESKey, iv, data) {
-  //   const key = await window.crypto.subtle.importKey('raw', exportedAESKey, {
-  //     name: 'AES-GCM'
-  //   }, false, ['decrypt']);
 
-  //   const decryptedBuffer = await window.crypto.subtle.decrypt({
-  //     name: 'AES-GCM',
-  //     iv: iv,
-  //     tagLength: AES_TAG_LENGTH
-  //   }, key, data);
-
-  //   return ArrayBufferUtils.decode(decryptedBuffer);
-  // }
 
   getPeer(jid) {
     if (!this.peers[jid]) {

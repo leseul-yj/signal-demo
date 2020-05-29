@@ -46,33 +46,33 @@ class Bundle {
       // signedPreKeyUserPublicKey = "BYnp+em8oJZepOBFN6K2NmVg3/JUZwBLhXPUAUNR4bp5";
 
       /// MwohBR6waCiw9uqQxt79CbrvIbBiYHJSJENSkM5ImV79SD5vEAAYACIgc3rv6Bt0XP6j8NruFE+tMXJwe3NoAseC64nSOfB/s6WLoA3LXZSZdg==
-      let fakeBundle = {
-         identityKey: this.getIdentityKey().pubKey,
+      let otherBundle = {
+         identityKey: ArrayBufferUtils.fromBase64(this.getIdentityKey().pubKey),
          registrationId: registrationId,
          preKey: {
             keyId: preKey.keyId,
-            publicKey: preKey.keyPair.pubKey
+            publicKey: ArrayBufferUtils.fromBase64(preKey.keyPair.pubKey)
          },
          signedPreKey: {
             keyId: signedPreKey.keyId,
-            publicKey: signedPreKey.keyPair.pubKey,
-            signature: signedPreKey.signature
+            publicKey: ArrayBufferUtils.fromBase64(signedPreKey.keyPair.pubKey),
+            signature: ArrayBufferUtils.fromBase64(signedPreKey.signature)
          }
       }
-      return fakeBundle;
+      // return otherBundle;
       return {
-         identityKey: this.getIdentityKey().pubKey,
+         identityKey: ArrayBufferUtils.fromBase64("BbgP+qzH44PwTJWZKPSqHvleKt/FtUxZXOwAZP7rCoA5"),
          registrationId: registrationId,
          preKey: {
             keyId: preKey.keyId,
-            publicKey: preKey.keyPair.pubKey
+            publicKey: ArrayBufferUtils.fromBase64("BeT+YWX8KiW0+PFxf/G+nUJuxMEWIlLPZ89sei7gvnpZ")
          },
          signedPreKey: {
             keyId: signedPreKey.keyId,
-            publicKey: signedPreKey.keyPair.pubKey,
-            signature: signedPreKey.signature
+            publicKey: ArrayBufferUtils.fromBase64("BYnp+em8oJZepOBFN6K2NmVg3/JUZwBLhXPUAUNR4bp5"),
+            signature: ArrayBufferUtils.fromBase64("SCyn+OZDfhAepEYcezX4bBj/tCperWH7HAAnXDPJ74ica83rqFRRqWCZ6uh6oDy/6XD06LzyL3K8EIpjcOXmhQ==")
          }
-      };
+      }
    }
 
    toObject() {
