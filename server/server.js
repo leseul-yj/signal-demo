@@ -15,28 +15,45 @@ wss.on('connection',function connection(ws) {
         console.log('received: %s',event);
 
         const message = JSON.parse(event);
-
+        let deviceId = undefined;
         switch(message.type) {
             case 'register':
                 let username = message.username;
-                ws.username = username;
-                if(username in websockets) {
-                    websockets[username].push(ws);
+                deviceId = message.deviceId;
+                ws.deviceId = deviceId;
+                if(deviceId in devices) {
+                    websockets[deviceId].push(ws);
+                    ws.send(JSON.stringify({type: 'registered',msg: "deviceId 已经存在"}));
                 }
                 else {
-                    websockets[username] = [ws];
-                }
-
-                let devs = username in devices ? devices[username] : []
-
-                ws.send(JSON.stringify({type: 'registered',devices: devs}));
-                for(dev in devices) {
-                    if(dev === username) {
-                        continue;
+                    websockets[deviceId] = [ws];
+                    let devs = {
+                        "deviceId": deviceId,
+                        "username": username,
                     }
-
-                    ws.send(JSON.stringify({type: 'devices',username: dev,devices: devices[dev]}));
+                    devices[deviceId] = devs;
+                    ws.send(JSON.stringify({type: 'registered',devices: devs,msg: "success"}));
                 }
+
+                /* if(devices[deviceId]) {
+                    ws.send(JSON.stringify({type: 'registered',msg: "deviceId 已经存在"}));
+                } else {
+                    let devs = {
+                        "deviceId": deviceId,
+                        "username": username,
+                    }
+                    devices[deviceId] = devs;
+                    // ws.send(JSON.stringify({type: 'registered',devices: devs,msg: "success"}));
+                } */
+                sendToAll(ws,message);
+                // ws.send(JSON.stringify({type: 'registered',devices: devs}));
+                // for(dev in devices) {
+                //     if(dev === username) {
+                //         continue;
+                //     }
+
+                //     ws.send(JSON.stringify({type: 'devices',username: dev,devices: devices[dev]}));
+                // }
                 break;
             case 'bundle':
                 bundles[message.deviceId] = message.bundle;
@@ -46,7 +63,7 @@ wss.on('connection',function connection(ws) {
                 sendToAll(ws,message);
                 break;
             case 'getBundle':
-                let deviceId = message.deviceId;
+                deviceId = message.deviceId;
                 if(deviceId in bundles) {
                     ws.send(JSON.stringify({
                         type: 'bundle',

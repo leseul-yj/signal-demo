@@ -19,7 +19,8 @@ class Connection {
 
             this.send(JSON.stringify({
                 type: 'register',
-                username: connection.username
+                username: connection.username,
+                deviceId: Config.deviceId
             }));
         };
 

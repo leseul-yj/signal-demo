@@ -19,21 +19,24 @@ let SessionCipher = libsignal.SessionCipher;
 var connection;
 
 function sendMessage() {
-    if (connection === undefined) {
+    if(connection === undefined) {
         return;
     }
 
     let to = document.getElementById('to').value;
     let message = document.getElementById('message').value;
 
-    connection.sendMessage(to, message);
+    connection.sendMessage(to,message);
 }
 
 function register() {
-    if (connection !== undefined) {
+    if(connection !== undefined) {
         return;
     }
 
     let username = document.getElementById('username').value;
     connection = new Connection(username);
 }
+
+
+register()
