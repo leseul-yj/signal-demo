@@ -40,27 +40,11 @@ class Peer {
     //         payload: aes.payload
     //     };
     // }
-    async encrypt(plaintext) {
-        let remoteDeviceIds = this.store.getDeviceList(this.jid);
-        let ownDeviceIds = this.store.getOwnDeviceList().filter((id) => {
-            return id !== this.store.getDeviceId();
-        });
-
-        let aes = await this.encryptWithAES(plaintext);
+    async encrypt(plaintext, id) {
         let promises = [];
-
-        for (let id of remoteDeviceIds) {
-            let device = this.getDevice(id);
-            plaintext = ArrayBufferUtils.encode(plaintext)
-            promises.push(device.encrypt(plaintext));
-        }
-
-        for (let id of ownDeviceIds) {
-            let device = this.getOwnDevice(id);
-
-            plaintext = ArrayBufferUtils.encode(plaintext)
-            promises.push(device.encrypt(plaintext));
-        }
+        let device = this.getDevice(id);
+        plaintext = ArrayBufferUtils.encode(plaintext)
+        promises.push(device.encrypt(plaintext));
 
         let keys = await Promise.all(promises);
 
@@ -80,7 +64,7 @@ class Peer {
 
     getDevice(id) {
         if (!this.devices[id]) {
-            this.devices[id] = new Device(this.jid, id, this.store);
+            this.devices[id] = new Device(this.jid, Number(id), this.store);
         }
 
         return this.devices[id];

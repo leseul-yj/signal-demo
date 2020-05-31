@@ -59,7 +59,7 @@ class Bundle {
             signature: ArrayBufferUtils.fromBase64(signedPreKey.signature)
          }
       }
-      // return otherBundle;
+      return otherBundle;
       return {
          identityKey: ArrayBufferUtils.fromBase64("BbgP+qzH44PwTJWZKPSqHvleKt/FtUxZXOwAZP7rCoA5"),
          registrationId: registrationId,

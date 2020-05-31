@@ -23,7 +23,7 @@ wss.on('connection',function connection(ws) {
                 ws.deviceId = deviceId;
                 if(deviceId in devices) {
                     websockets[deviceId].push(ws);
-                    ws.send(JSON.stringify({type: 'registered',msg: "deviceId 已经存在"}));
+                    ws.send(JSON.stringify({type: 'registered',msg: "deviceId 已经存在",status:0,devices: devices[deviceId]}));
                 }
                 else {
                     websockets[deviceId] = [ws];
@@ -32,7 +32,7 @@ wss.on('connection',function connection(ws) {
                         "username": username,
                     }
                     devices[deviceId] = devs;
-                    ws.send(JSON.stringify({type: 'registered',devices: devs,msg: "success"}));
+                    ws.send(JSON.stringify({type: 'registered',devices: devs,msg: "success",status:1}));
                 }
 
                 /* if(devices[deviceId]) {

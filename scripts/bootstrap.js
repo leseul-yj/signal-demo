@@ -112,9 +112,9 @@ class Bootstrap {
       let deviceIds = this.store.getOwnDeviceList();
       let ownDeviceId = this.store.getDeviceId();
 
-      if(deviceIds.indexOf(ownDeviceId) < 0) { //@REVIEW string vs number
-         deviceIds.push(ownDeviceId);
-      }
+      // if(deviceIds.indexOf(ownDeviceId) < 0) { //@REVIEW string vs number
+      //    deviceIds.push(ownDeviceId);
+      // }
 
       return this.connection.publishDevices(deviceIds);
    }

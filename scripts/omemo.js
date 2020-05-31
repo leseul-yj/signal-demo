@@ -1,11 +1,9 @@
 class Omemo {
   constructor(storage, connection, deviceNumber) {
     this.connection = connection;
+    this.jid = connection.username;
     this.store = new Store(storage, connection, deviceNumber);
-    this.peers = {};
-
-    Peer.setOwnJid(connection.username);
-    this.deviceNumber = deviceNumber;
+    this.devices = {};
   }
 
   storeOwnDeviceList(deviceList) {
@@ -24,114 +22,116 @@ class Omemo {
     return this.bootstrap.prepare();
   }
 
-  encrypt(contact, message, xmlElement) {
-    const peer = this.getPeer(contact);
+  async encrypt(contact, message, xmlElement) {
+    let promises = [];
+    let device = this.getDevice(contact);
+    let plaintext = ArrayBufferUtils.encode(message)
+    promises.push(device.encrypt(plaintext));
 
-    return peer.encrypt(message).then((encryptedMessages) => {
-      const stanza = Stanza.buildEncryptedStanza(encryptedMessages, this.store.getDeviceId());
-      return stanza;
-    })
+    let keys = await Promise.all(promises);
+
+    keys = keys.filter(key => key !== null);
+
+    if (keys.length === 0) {
+      throw 'Could not encrypt data with any Signal session';
+    }
+
+    return keys;
+    // return device.encrypt(message,contact).then((encryptedMessages) => {
+    //   const stanza = Stanza.buildEncryptedStanza(encryptedMessages, this.store.getDeviceId());
+    //   return stanza;
+    // })
   }
+  getDevice(id) {
+    if (!this.devices[id]) {
+      this.devices[id] = new Device(this.jid, Number(id), this.store);
+    }
 
+    return this.devices[id];
+  }
   async decrypt(stanza) {
     if (stanza.type !== 'message') {
       throw 'Root element is no message element';
     }
 
-    const encryptedElement = stanza.encrypted;
+    const encryptedElement = stanza.encrypted[0];
 
     if (encryptedElement === undefined) {
       throw 'No encrypted stanza found';
     }
 
     const from = stanza.from;
-    // const encryptedData = Stanza.parseEncryptedStanza(encryptedElement);
-    const encryptedData = encryptedElement;
-    if (!encryptedData) {
-      throw 'Could not parse encrypted stanza';
-    }
-
-    const ownDeviceId = this.store.getDeviceId();
-    const ownPreKeyFiltered = [encryptedData]
-
-    if (ownPreKeyFiltered.length !== 1) {
-      return Promise.reject(`Found ${ownPreKeyFiltered.length} PreKeys which match my device id (${ownDeviceId}).`);
-    }
-
-    const ownPreKey = ownPreKeyFiltered[0]; //@TODO rename var
-    const peer = this.getPeer(from);
-    //   const exportedKey;
 
     var exportedKey;
+    let device = this.getDevice(stanza.to);
     try {
-      exportedKey = await peer.decrypt(encryptedData.deviceId, ownPreKey.ciphertext, ownPreKey.preKey);
+      exportedKey = await device.decrypt(encryptedElement.ciphertext.body, encryptedElement.preKey);
     } catch (err) {
       throw 'Error during decryption: ' + err;
     }
     return ArrayBufferUtils.decode(exportedKey);
   }
 
-
-  getPeer(jid) {
-    if (!this.peers[jid]) {
-      this.peers[jid] = new Peer(jid, this.store);
+  getDevice(id) {
+    if (!this.devices[id]) {
+      this.devices[id] = new Device(this.jid, Number(id), this.store);
     }
 
-    return this.peers[jid];
+    return this.devices[id];
   }
+
 }
 
 class Stanza {
   static buildEncryptedStanza(message, ownDeviceId) {
 
-      var encryptedElement = {
-          header: {
-              sid: ownDeviceId,
-              keys: [],
-              iv: ArrayBufferUtils.toBase64(message.iv)
-          },
-          payload: ArrayBufferUtils.toBase64(message.payload)
-      };
+    var encryptedElement = {
+      header: {
+        sid: ownDeviceId,
+        keys: [],
+        iv: ArrayBufferUtils.toBase64(message.iv)
+      },
+      payload: ArrayBufferUtils.toBase64(message.payload)
+    };
 
-      // let keys = message.keys.map(function (key) {
-      //     return {
-      //         rid: key.deviceId,
-      //         prekey: key.preKey ? true : undefined,
-      //         value: btoa(key.ciphertext.body)
-      //     };
-      // });
+    // let keys = message.keys.map(function (key) {
+    //     return {
+    //         rid: key.deviceId,
+    //         prekey: key.preKey ? true : undefined,
+    //         value: btoa(key.ciphertext.body)
+    //     };
+    // });
 
-      // encryptedElement.header.keys = keys;
-      encryptedElement = message[0];
-      return encryptedElement;
+    // encryptedElement.header.keys = keys;
+    encryptedElement = message[0];
+    return encryptedElement;
   }
 
   static parseEncryptedStanza(encryptedElement) {
-      let headerElement = encryptedElement.header;
-      let payloadElement = encryptedElement.payload;
+    let headerElement = encryptedElement.header;
+    let payloadElement = encryptedElement.payload;
 
-      if (headerElement === undefined) {
-          return false;
-      }
+    if (headerElement === undefined) {
+      return false;
+    }
 
-      let sourceDeviceId = headerElement.sid;
-      let iv = ArrayBufferUtils.fromBase64(headerElement.iv);
-      let payload = ArrayBufferUtils.fromBase64(payloadElement);
+    let sourceDeviceId = headerElement.sid;
+    let iv = ArrayBufferUtils.fromBase64(headerElement.iv);
+    let payload = ArrayBufferUtils.fromBase64(payloadElement);
 
-      let keys = headerElement.keys.map(function (keyElement) {
-          return {
-              preKey: keyElement.prekey,
-              ciphertext: atob(keyElement.value),
-              deviceId: keyElement.rid
-          };
-      }); 
-
+    let keys = headerElement.keys.map(function (keyElement) {
       return {
-          sourceDeviceId: sourceDeviceId,
-          keys: keys,
-          iv: iv,
-          payload: payload
+        preKey: keyElement.prekey,
+        ciphertext: atob(keyElement.value),
+        deviceId: keyElement.rid
       };
+    });
+
+    return {
+      sourceDeviceId: sourceDeviceId,
+      keys: keys,
+      iv: iv,
+      payload: payload
+    };
   }
 }
-

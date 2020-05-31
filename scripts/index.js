@@ -23,12 +23,16 @@ function sendMessage() {
         return;
     }
 
-    let to = document.getElementById('to').value;
+    let to = document.getElementById('to').getAttribute("userid");
     let message = document.getElementById('message').value;
 
     connection.sendMessage(to,message);
 }
 
+function estConnection(){
+    let to = document.getElementById('to').getAttribute("userid");
+    //connection.getBundle(to);
+}
 function register() {
     if(connection !== undefined) {
         return;
