@@ -35,25 +35,8 @@ wss.on('connection',function connection(ws) {
                     ws.send(JSON.stringify({type: 'registered',devices: devs,msg: "success",status:1}));
                 }
 
-                /* if(devices[deviceId]) {
-                    ws.send(JSON.stringify({type: 'registered',msg: "deviceId 已经存在"}));
-                } else {
-                    let devs = {
-                        "deviceId": deviceId,
-                        "username": username,
-                    }
-                    devices[deviceId] = devs;
-                    // ws.send(JSON.stringify({type: 'registered',devices: devs,msg: "success"}));
-                } */
                 sendToAll(ws,message);
-                // ws.send(JSON.stringify({type: 'registered',devices: devs}));
-                // for(dev in devices) {
-                //     if(dev === username) {
-                //         continue;
-                //     }
 
-                //     ws.send(JSON.stringify({type: 'devices',username: dev,devices: devices[dev]}));
-                // }
                 break;
             case 'bundle':
                 bundles[message.deviceId] = message.bundle;

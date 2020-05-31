@@ -6,7 +6,7 @@ const AES_KEY_LENGTH = 128;
 const AES_TAG_LENGTH = 128;
 const AES_EXTRACTABLE = true;
 
-localStorage.clear();
+//localStorage.clear();
 
 let libsignal = (window).nodesignal;
 

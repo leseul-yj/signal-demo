@@ -1,7 +1,6 @@
 class Omemo {
   constructor(storage, connection, deviceNumber) {
     this.connection = connection;
-    this.jid = connection.username;
     this.store = new Store(storage, connection, deviceNumber);
     this.devices = {};
   }
@@ -24,7 +23,7 @@ class Omemo {
 
   async encrypt(contact, message, xmlElement) {
     let promises = [];
-    let device = this.getDevice(contact);
+    let device = this.getDevice(this.connection.username,contact);
     let plaintext = ArrayBufferUtils.encode(message)
     promises.push(device.encrypt(plaintext));
 
@@ -37,14 +36,11 @@ class Omemo {
     }
 
     return keys;
-    // return device.encrypt(message,contact).then((encryptedMessages) => {
-    //   const stanza = Stanza.buildEncryptedStanza(encryptedMessages, this.store.getDeviceId());
-    //   return stanza;
-    // })
+
   }
-  getDevice(id) {
+  getDevice(name,id) {
     if (!this.devices[id]) {
-      this.devices[id] = new Device(this.jid, Number(id), this.store);
+      this.devices[id] = new Device(name, Number(id), this.store);
     }
 
     return this.devices[id];
@@ -63,7 +59,7 @@ class Omemo {
     const from = stanza.from;
 
     var exportedKey;
-    let device = this.getDevice(stanza.to);
+    let device = this.getDevice(stanza.fromUserName, from);
     try {
       exportedKey = await device.decrypt(encryptedElement.ciphertext.body, encryptedElement.preKey);
     } catch (err) {
@@ -72,13 +68,7 @@ class Omemo {
     return ArrayBufferUtils.decode(exportedKey);
   }
 
-  getDevice(id) {
-    if (!this.devices[id]) {
-      this.devices[id] = new Device(this.jid, Number(id), this.store);
-    }
 
-    return this.devices[id];
-  }
 
 }
 

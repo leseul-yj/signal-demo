@@ -114,6 +114,7 @@ class Connection {
         this.send({
             type: 'message',
             from: connection.deviceId,
+            fromUserName: connection.username,
             to: to,
             encrypted: encryptedMessage
         });
