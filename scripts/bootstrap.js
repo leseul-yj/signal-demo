@@ -1,23 +1,20 @@
 class Bootstrap {
-   constructor(store, connection) {
+   constructor(store,connection) {
       this.store = store;
       this.connection = connection;
    }
 
    async prepare() {
-      if (!this.store.isReady()) {
+      if(!this.store.isReady()) {
          await this.setup();
       }
 
-      if (!this.store.isPublished()) {
+      if(!this.store.isPublished()) {
          let bundle = await this.generateBundle();
-         let node = NS_BUNDLES + this.store.getDeviceId();
 
-         // @TODO catch error
-         await this.connection.publishBundle(this.store.getDeviceId(), bundle.toObject());
-         this.store.put('published', true);
+         await this.connection.publishBundle(this.store.getDeviceId(),bundle.toObject());
+         this.store.put('published',true);
 
-         // @TODO catch error
          await this.addDeviceIdToDeviceList();
       }
 
@@ -29,10 +26,10 @@ class Bootstrap {
          this.generateDeviceId(),
          this.generateIdentityKeyPair(),
          this.generateRegistrationId(),
-      ]).then(([deviceId, identityKey, registrationId]) => {
-         this.store.put('deviceId', deviceId);
-         this.store.put('identityKey', identityKey);
-         this.store.put('registrationId', registrationId);
+      ]).then(([deviceId,identityKey,registrationId]) => {
+         this.store.put('deviceId',deviceId);
+         this.store.put('identityKey',identityKey);
+         this.store.put('registrationId',registrationId);
       });
    }
 
@@ -42,7 +39,7 @@ class Bootstrap {
       let {
          identifyKeyPair
       } = this.store.getIdentityKeyPair();
-      if (identifyKeyPair && identifyKeyPair.pubKey && identifyKeyPair.privKey) {
+      if(identifyKeyPair && identifyKeyPair.pubKey && identifyKeyPair.privKey) {
          identityKey = {
             "pubKey": ArrayBufferUtils.fromBase64(identifyKeyPair.pubKey),
             "privKey": ArrayBufferUtils.fromBase64(identifyKeyPair.privKey)
@@ -55,7 +52,7 @@ class Bootstrap {
 
    async generateRegistrationId() {
       let registrationId = await this.store.getLocalRegistrationId();
-      if (registrationId == undefined) {
+      if(registrationId == undefined) {
          registrationId = KeyHelper.generateRegistrationId();
       }
       return Promise.resolve(registrationId);
@@ -63,8 +60,8 @@ class Bootstrap {
 
    generateDeviceId() {
       let deviceId = this.store.getDeviceId();
-      if (deviceId == undefined) {
-         deviceId = Random.number(Math.pow(2, 31) - 1, 1);
+      if(deviceId == undefined) {
+         deviceId = Random.number(Math.pow(2,31) - 1,1);
       }
       return Promise.resolve(deviceId);
       // return Promise.resolve(Random.number(Math.pow(2, 31) - 1, 1));
@@ -75,7 +72,7 @@ class Bootstrap {
 
       let preKeyPromises = [];
 
-      for (let i = 0; i < NUM_PRE_KEYS; i++) {
+      for(let i = 0; i < NUM_PRE_KEYS; i++) {
          preKeyPromises.push(this.generatePreKey(i));
       }
 
@@ -94,16 +91,16 @@ class Bootstrap {
    async generatePreKey(id) {
       let preKey = await KeyHelper.generatePreKey(id);
 
-      this.store.storePreKey(id, preKey.keyPair);
+      this.store.storePreKey(id,preKey.keyPair);
 
       return preKey;
    }
 
    async generateSignedPreKey(id) {
       let identity = await this.store.getIdentityKeyPair();
-      let signedPreKey = await KeyHelper.generateSignedPreKey(identity, id);
+      let signedPreKey = await KeyHelper.generateSignedPreKey(identity,id);
 
-      this.store.storeSignedPreKey(id, signedPreKey.keyPair);
+      this.store.storeSignedPreKey(id,signedPreKey.keyPair);
 
       return signedPreKey;
    }
@@ -112,10 +109,6 @@ class Bootstrap {
       let jid = this.connection.username;
       let deviceIds = this.store.getOwnDeviceList();
       let ownDeviceId = this.store.getDeviceId();
-
-      // if(deviceIds.indexOf(ownDeviceId) < 0) { //@REVIEW string vs number
-      //    deviceIds.push(ownDeviceId);
-      // }
 
       return this.connection.publishDevices(deviceIds);
    }

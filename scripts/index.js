@@ -1,4 +1,4 @@
-const NUM_PRE_KEYS = 10; // preKey的数量
+const NUM_PRE_KEYS = 2; // preKey的数量
 const NS_BASE = 'eu.siacs.conversations.axolotl';
 const NS_DEVICELIST = NS_BASE + '.devicelist';
 const NS_BUNDLES = NS_BASE + '.bundles:';
@@ -29,7 +29,7 @@ function sendMessage() {
     connection.sendMessage(to,message);
 }
 
-function estConnection(){
+function estConnection() {
     let to = document.getElementById('to').getAttribute("userid");
     //connection.getBundle(to);
 }
