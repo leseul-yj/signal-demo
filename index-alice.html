@@ -10,7 +10,28 @@
             document.getElementById("demo").innerHTML = "Paragraph changed.";
         }
     </script>
-    <!-- <script src ="scripts/require.js"></script> -->
+    <script>
+        let Config = {
+            "deviceId": 1000000000,
+            "username": "alice",
+            "registrationId": 100,
+            "identifyKeyPair": {
+                "pubKey": "BclRV12FpGeEEZ7N/h9jGQXp27xh/ePHGAkseZKzjz9L",
+                "privKey": "6GhpOlK8aGYNumojzbx+cU6WOEFNvqMuHThvYNXRG2U="
+            },
+            "preKeys": [{
+                "pubKey": "BdXERoqndlfCfDzcGVbx1LTAcWnXJ5QmWM7bKNBbpO00",
+                "privKey": "GMB4xe/yZfs1McfQy+283OWEFTl+wgoUg20eEwAR/nk="
+            }],
+            "signedPreKey": {
+                "keyId": 1,
+                "pubKey": "BWHw+mNBrdMaC0m8fDQcIDXHhn7YOUGo1DydXwibKPZg",
+                "privKey": "H/PHVqYRYPGZ3Z5XmQCrXXIrr4WPUns9PAddtQsaHg=",
+                "signature": "BjBiSKqGVijQJrUTD/mluEiwmIjAcEmKHnZtg8fMPun7KhUsrSmmgC7T++Sik7DWECbMrlag4hZ9zNVH0VMEAQ=="
+            }
+    
+        }
+    </script>
     <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.19.2/axios.min.js"></script>
     <script src="./scripts/api.js"></script>
     <script src="./scripts/jquery.min.js"></script>
@@ -18,13 +39,13 @@
     <!-- <script src="scripts/bundle.js"></script> -->
     <!-- <script src="scripts/storage.js"></script> -->
 
-    <script src="scripts/device.js"></script>
+    <!-- <script src="scripts/device.js"></script> -->
     <!-- <script src="scripts/bootstrap.js"></script> -->
     <!-- <script src="scripts/stanza.js"></script> -->
     <script src="scripts/arraybuffer.js"></script>
     <!-- <script src="scripts/peer.js"></script> -->
     <script src="scripts/store.js"></script>
-    <script src="scripts/omemo.js"></script>
+    <script src="scripts/encryptUtil.js"></script>
     <script src="scripts/connection.js"></script>
     <!-- <script src="scripts/bundle.js"></script> -->
 
@@ -41,6 +62,7 @@
 </style>
 
 <body class="root">
+
     <div class="wrap">
         <h1>Welcome to secure chat!</h1>
         <!-- <button type="button" onclick="store('hi', 'ali')">set</button>
@@ -83,28 +105,7 @@
 
 
 </body>
-<script>
-    let Config = {
-        "deviceId": 1000000000,
-        "username": "alice",
-        "registrationId": 100,
-        "identifyKeyPair": {
-            "pubKey": "BclRV12FpGeEEZ7N/h9jGQXp27xh/ePHGAkseZKzjz9L",
-            "privKey": "6GhpOlK8aGYNumojzbx+cU6WOEFNvqMuHThvYNXRG2U="
-        },
-        "preKeys": [{
-            "pubKey": "BdXERoqndlfCfDzcGVbx1LTAcWnXJ5QmWM7bKNBbpO00",
-            "privKey": "GMB4xe/yZfs1McfQy+283OWEFTl+wgoUg20eEwAR/nk="
-        }],
-        "signedPreKey": {
-            "keyId": 1,
-            "pubKey": "BWHw+mNBrdMaC0m8fDQcIDXHhn7YOUGo1DydXwibKPZg",
-            "privKey": "H/PHVqYRYPGZ3Z5XmQCrXXIrr4WPUns9PAddtQsaHg=",
-            "signature": "BjBiSKqGVijQJrUTD/mluEiwmIjAcEmKHnZtg8fMPun7KhUsrSmmgC7T++Sik7DWECbMrlag4hZ9zNVH0VMEAQ=="
-        }
 
-    }
-</script>
 <script src="scripts/index.js"></script>
 
 </html>

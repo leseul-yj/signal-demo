@@ -11,10 +11,9 @@ D_RECEIVING = 2;
 
 class Store {
 
-    constructor(storage,connection,deviceNumber) { //@TODO add ts type
+    constructor(storage,connection) { //@TODO add ts type
         this.storage = storage;
         this.connection = connection;
-        this.deviceNumber = deviceNumber;
         this.Direction = {
             SENDING: 1,
             RECEIVING: 2
@@ -218,6 +217,7 @@ class Store {
 
         // TODO: get bundle form localstorage
         var bundleElement = await this.connection.getBundle(address.getDeviceId());
+        // var bundleElement = await ApiRequest.getPublicKeyAndOneTimePreKey()
 
         if(bundleElement === undefined) {
             return Promise.reject('Found no bundle');

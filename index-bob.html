@@ -9,19 +9,39 @@
             document.getElementById("demo").innerHTML = "Paragraph changed.";
         }
     </script>
-    <!-- <script src ="scripts/require.js"></script> -->
+    <script>
+        const Config = {
+            "deviceId": 2000000000,
+            "username": "bob",
+            "registrationId": 200,
+            "identifyKeyPair": {
+                "pubKey": "BZLuYP8uR3+P9Gjxx+AP2FIyY0rp5kKc5MsJlIUphGEc",
+                "privKey": "COJYu3ELoibrH3DQkKKKx3d/O7JonPcROxc+L+nM2kM="
+            },
+            "preKeys": [{
+                "pubKey": "BUS0IvgBG7TfbW4Qk62j+2ok53Aup0AdMBTEPhwk2WQW",
+                "privKey": "0B1EDvmHFU6LgXywqMPDaqWLq8WfiYJOxwb7BSV1PVE="
+            }],
+            "signedPreKey": {
+                "keyId": 1,
+                "pubKey": "Bck7skvHfmsemq6OlncpQPaHD44oruT2vKoQ3cM2Wq9U",
+                "privKey": "0DVFXVDYYuE43WjTbJEdrg320KsaTvo93YuQ4ElUZXs=",
+                "signature": "IahRPrlf+jkF0tHxCwFX9XjCKqteQvxOX2bCD1OKxpJmiucgb+4Y0hBjixgqlYmiKf8IDay/444jEbC1/WaIDQ=="
+            }
+        }
+    </script>
     <script src="./scripts/dist.js"></script>
     <script src="./scripts/jquery.min.js"></script>
     <!-- <script src="scripts/bundle.js"></script> -->
     <!-- <script src="scripts/storage.js"></script> -->
     <!-- <script src="scripts/libsignal-protocol.js"></script> -->
-    <script src="scripts/device.js"></script>
+    <!-- <script src="scripts/device.js"></script> -->
     <!-- <script src="scripts/bootstrap.js"></script> -->
     <!-- <script src="scripts/stanza.js"></script> -->
     <script src="scripts/arraybuffer.js"></script>
     <!-- <script src="scripts/peer.js"></script> -->
     <script src="scripts/store.js"></script>
-    <script src="scripts/omemo.js"></script>
+    <script src="scripts/encryptUtil.js"></script>
     <script src="scripts/connection.js"></script>
     <!-- <script src="scripts/bundle.js"></script> -->
 </head>
@@ -49,27 +69,7 @@
     </div>
 
 </body>
-<script>
-    const Config = {
-        "deviceId": 2000000000,
-        "username": "bob",
-        "registrationId": 200,
-        "identifyKeyPair": {
-            "pubKey": "BZLuYP8uR3+P9Gjxx+AP2FIyY0rp5kKc5MsJlIUphGEc",
-            "privKey": "COJYu3ELoibrH3DQkKKKx3d/O7JonPcROxc+L+nM2kM="
-        },
-        "preKeys": [{
-            "pubKey": "BUS0IvgBG7TfbW4Qk62j+2ok53Aup0AdMBTEPhwk2WQW",
-            "privKey": "0B1EDvmHFU6LgXywqMPDaqWLq8WfiYJOxwb7BSV1PVE="
-        }],
-        "signedPreKey": {
-            "keyId": 1,
-            "pubKey": "Bck7skvHfmsemq6OlncpQPaHD44oruT2vKoQ3cM2Wq9U",
-            "privKey": "0DVFXVDYYuE43WjTbJEdrg320KsaTvo93YuQ4ElUZXs=",
-            "signature": "IahRPrlf+jkF0tHxCwFX9XjCKqteQvxOX2bCD1OKxpJmiucgb+4Y0hBjixgqlYmiKf8IDay/444jEbC1/WaIDQ=="
-        }
-    }
-</script>
+
 <script src="scripts/index.js"></script>
 
 </html>

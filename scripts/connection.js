@@ -37,13 +37,15 @@ class Connection {
                     connection.username;
 
                     let storage = new Storage();
-                    connection.omemo = new Omemo(storage, connection);
+                    connection.EncryptUtil = new EncryptUtil(storage, connection);
                     connection.updateDevices({
                         username: connection.username,
                         devices: devices
                     })
-                    connection.omemo.prepare();
-
+                     connection.EncryptUtil.prepare().then((result)=>{
+                        connection.publishBundle(result);
+                     });
+                    
                     break;
                 case 'devices':
                     connection.updateDevices(msg);
@@ -99,17 +101,12 @@ class Connection {
         });
     }
 
-    publishBundle(deviceId, bundle) {
-        this.send({
-            type: 'bundle',
-            deviceId: deviceId,
-            username: this.username,
-            bundle: bundle
-        });
+    publishBundle(result) {
+        this.send(result);
     }
 
     async sendMessage(to, message) {
-        let encryptedMessage = await this.omemo.encrypt(to, message);
+        let encryptedMessage = await this.EncryptUtil.encrypt(to, message);
         console.log('sending message: %s to %s', message, to);
         this.send({
             type: 'message',
@@ -125,7 +122,7 @@ class Connection {
     }
 
     async decrypt(message) {
-        let decrypted = await this.omemo.decrypt(message);
+        let decrypted = await this.EncryptUtil.decrypt(message);
         console.log('decrypted message: %s', decrypted);
         var newNode = document.createElement('div');
         newNode.innerHTML = message.from + ': ' + decrypted;
@@ -139,11 +136,11 @@ class Connection {
         let deviceIds = message.devices;
 
         if (ownJid === message.username) {
-            this.omemo.storeOwnDeviceList(deviceIds);
+            this.EncryptUtil.storeOwnDeviceList(deviceIds);
 
             //@TODO handle own update (check for own device id)
         } else {
-            this.omemo.storeDeviceList(message.username, deviceIds);
+            this.EncryptUtil.storeDeviceList(message.username, deviceIds);
         }
     }
 
