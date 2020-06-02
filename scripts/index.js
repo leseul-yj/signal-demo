@@ -3,24 +3,24 @@
 var connection;
 
 function sendMessage() {
-    if(connection === undefined) {
+    if (connection === undefined) {
         return;
     }
 
     let to = document.getElementById('to').getAttribute("userid");
     let message = document.getElementById('message').value;
 
-    connection.sendMessage(to,message);
+    connection.sendMessage(to, message);
 }
 
 function estConnection() {
     let to = document.getElementById('to').getAttribute("userid");
     let toName = document.getElementById('to').value;
-    connection.EncryptUtil.initSession(toName,parseInt(to));
+    connection.EncryptUtil.initSession(toName, parseInt(to));
 }
 
 function register() {
-    if(connection !== undefined) {
+    if (connection !== undefined) {
         return;
     }
 
@@ -30,12 +30,7 @@ function register() {
 
 register();
 
-const group_id_db = 'group_table' + 18612392477;
-var db = new Dexie(group_id_db);
-
-db.open().then(result => {
-
-});
+const roomId = 'roomId' + 18612392477;
 
 class indexedDBStorage {
     constructor() {
@@ -49,23 +44,47 @@ class indexedDBStorage {
         window.db = this.dataBase;
         //无数据时，默认version为1，须是db.close();的时候设置
         //this.dataBase.version(this.version).stores();
-
-
     }
-    addTables() {
+    // 添加表
+    addTables(tableOption, name) {
         //设置表名
-        this.dataBase.version(this.version).stores({
-            group_id_db: "++id,keyPair",
-        });
-
-
+        this.tableName = name;
+        this.dataBase.version(this.version).stores(tableOption);
     }
-    addTablesData() {
-        var pId,Pair;
-        for(var i = 0; i < 1000; i++) {
-            pId = i + 100000;
+    // 向表里面添加数据
+    addTablesData(addData) {
+        var pId, Pair;
+        for (var i = 0; i < 1000; i++) {
+            pId = i;
             Pair = nodesignal.curve.generateKeyPair();
-            this.dataBase.group_id_db.put({id: pId,"keyPair": Pair})
+            this.dataBase[this.tableName].add({
+                id: pId,
+                "keyPair": Pair
+            })
+        }
+    }
+    // 更新表中数据
+    async updateTablesData(upData) {
+        await this.dataBase[this.tableName].update(upData)
+    }
+    // 删除数据 delData->array
+    async deleteTablesData(delData = []) {
+        if (delData.length > 1) {
+            await this.dataBase[this.tableName].delete(delData[0])
+        } else {
+            await this.dataBase[this.tableName].bulkDelete(delData)
+        }
+    }
+    // 数据查询
+    async queryTableData(query = []) {
+        try {
+            if (query.length > 1) {
+                await this.dataBase[this.tableName].get(query[0]);
+            } else {
+                await this.dataBase[this.tableName].bulkGet(query);
+            }
+        } catch (err) {
+            console.log(err)
         }
 
     }
@@ -76,21 +95,18 @@ class indexedDBStorage {
 
     //获得表数据
     getData() {
-        var list = document.getElementById("list");
-        var dataList = this.dataBase.tables;
-        var ulnode = document.createElement("ul");
-        console.log(dataList,"----------");
-        for(var i = 0; i < dataList.length; i++) {
-            var li = document.createElement("li");
-            li.innerHTML = dataList[i].name;
-            ulnode.appendChild(li);
-        }
-        list.appendChild(ulnode);
+         this.queryTableData([1]).then(dataList=>{
+            console.log(dataList);
+         });
+        
     }
-
 }
 
 let groupDB = new indexedDBStorage();
-groupDB.createDB("groupchat");
-groupDB.addTables();
+groupDB.createDB("roomChat");
+
+let addTable = {};
+addTable[roomId] = "++id,keyPair";
+groupDB.addTables(addTable, roomId);
 groupDB.addTablesData();
+groupDB.getData();
