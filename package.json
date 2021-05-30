@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/shaljam/libsignal-protocol-javascript-example#readme",
   "dependencies": {
-    "ws": "^7.3.0"
+    "ws": "^7.4.6"
   }
 }
